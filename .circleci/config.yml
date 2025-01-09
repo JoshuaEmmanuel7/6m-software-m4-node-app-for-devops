@@ -1,8 +1,7 @@
-version: 2.1
+version: 2.2
 
 orbs:
   node: circleci/node@5.0.1
-  docker: circleci/docker@3.1.0 
 
 jobs:
   build:
@@ -48,7 +47,6 @@ build-and-push:
             docker push joshuaemmanuel7/education-space:latest
 
 workflows:
-  version: 3
   simple_workflow:
     jobs:
       - build
@@ -58,4 +56,3 @@ workflows:
       - build-and-push:
           requires:
             - test
-            

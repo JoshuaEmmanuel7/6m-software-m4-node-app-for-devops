@@ -47,7 +47,6 @@ build-and-push:
             docker push joshuaemmanuel7/education-space:latest
 
 workflows:
-  version: 2
   simple_workflow:
     jobs:
       - build
