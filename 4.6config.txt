@@ -2,7 +2,8 @@ version: 2.1
 
 orbs:
   node: circleci/node@5.0.1
-  docker: circleci/docker@3.1.0 
+  heroku: circleci/heroku@2.0.0
+  docker: circleci/docker@2.1.4
 
 jobs:
   build:
@@ -24,37 +25,31 @@ jobs:
           pkg-manager: npm
       - run: |
           echo "Running tests"
-          npm run test        
-build-and-push:
+          npm run test
+  deploy:
     docker:
       - image: cimg/node:16.10
     steps:
+      - setup_remote_docker
+      - heroku/install
       - checkout
-      - setup_remote_docker:
-          version: 20.10.7  # Set up remote Docker environment
-          docker_layer_caching: true
       - run:
-          name: Build Docker Image
+          name: Heroku Container Push
           command: |
-            echo "Building Docker image"
-            docker build -t joshuaemmanuel7/education-space:latest .
-      - run:
-          name: Log in to Docker Hub
-          command: |
-            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-      - run:
-          name: Push Docker Image to Docker Hub
-          command: |
-            docker push joshuaemmanuel7/education-space:latest
+            heroku container:login
+            heroku stack:set container -a jepster
+            heroku container:push web -a jepster
+            heroku container:release web -a jepster
+
+
 
 workflows:
-  version: 3
   simple_workflow:
     jobs:
       - build
       - test:
           requires: 
             - build
-      - build-and-push:
+      - deploy:
           requires:
             - test
