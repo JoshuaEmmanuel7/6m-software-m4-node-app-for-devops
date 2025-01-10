@@ -24,7 +24,7 @@ jobs:
           pkg-manager: npm
       - run: |
           echo “Running tests...”
-          npm run test 
+          npm run test
   
   build-and-push:
     docker:
