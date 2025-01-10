@@ -32,6 +32,10 @@ jobs:
       - docker/check
       - docker/build:
           image: joshuaemmanuel7/education-space
+      - run:
+          name: Docker Login
+          command: |
+            echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
       - docker/push:
           image: joshuaemmanuel7/education-space
 
