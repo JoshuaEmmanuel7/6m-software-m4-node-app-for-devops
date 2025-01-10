@@ -36,10 +36,6 @@ jobs:
               echo "Building Docker image"
               docker build -t joshuaemmanuel7/education-space:latest .
         - run:
-            name: Log in to Docker Hub
-            command: |
-              echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-        - run:
             name: Push Docker Image to Docker Hub
             command: |
               docker push joshuaemmanuel7/education-space:latest
