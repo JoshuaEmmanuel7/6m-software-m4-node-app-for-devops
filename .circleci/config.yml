@@ -36,7 +36,7 @@ jobs:
           name: Build Docker Image
           command: |
             echo "Building Docker image"
-            docker build -t joshuaemmanuel7/education-space:latest .
+            docker build -t joshuaemmanuel7/education-space:<<pipeline.git.tag>> .
       - run:
           name: Log in to Docker Hub
           command: |
@@ -44,7 +44,7 @@ jobs:
       - run:
           name: Push Docker Image to Docker Hub
           command: |
-             docker push joshuaemmanuel7/education-space:latest
+             docker push joshuaemmanuel7/education-space:<<pipeline.git.tag>>
   deploy:
     docker:
       - image: cimg/node:16.10
@@ -64,13 +64,27 @@ workflows:
   simple_workflow:
     jobs:
       - build
+        filters:
+          branches:
+            only: main
       - test:
           requires:
             - build
+          filters: 
+            branches:
+              only: main
       - build-and-push:
-          requires:
-            - test
+          filters:
+            tags:
+              only: /^v.*/  
+            branches: 
+              ignore: /.*/
       - deploy:
           requires:
-            - test
+            - build-and-push
+          filters:
+            tags:
+              only: /^v.*/
+            branches: 
+              ignore: /.*/
           
