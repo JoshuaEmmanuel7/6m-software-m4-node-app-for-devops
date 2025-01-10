@@ -29,9 +29,6 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
-      - docker/login:
-        username: $DOCKERHUB_USERNAME
-        password: $DOCKERHUB_PASSWORD
       - docker/check
       - docker/build:
           image: joshuaemmanuel7/education-space
