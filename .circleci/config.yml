@@ -41,7 +41,7 @@ jobs:
       - run:
           name: Log in to Docker Hub
           command: |
-            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_LOGIN" --password-stdin
       - run:
           name: Push Docker Image to Docker Hub
           command: |
@@ -104,9 +104,6 @@ workflows:
   simple_workflow:
     jobs:
       - build
-      # - deploy:
-      #     requires:
-      #       - test
       - scan:
           requires:
             - build
