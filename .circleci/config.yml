@@ -27,39 +27,39 @@ jobs:
           echo “Running tests...”
           npm run test 
   
-  # build-and-push:
-  #   docker:
-  #     - image: cimg/node:16.10
-  #   steps:
-  #     - checkout
-  #     - setup_remote_docker
-  #     - run:
-  #         name: Build Docker Image
-  #         command: |
-  #           echo "Building Docker image"
-  #           docker build -t joshuaemmanuel7/education-space:<<pipeline.git.tag>> .
-  #     - run:
-  #         name: Log in to Docker Hub
-  #         command: |
-  #           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  #     - run:
-  #         name: Push Docker Image to Docker Hub
-  #         command: |
-  #            docker push joshuaemmanuel7/education-space:<<pipeline.git.tag>>
-  # deploy:
-  #   docker:
-  #     - image: cimg/node:16.10
-  #   steps:
-  #     - setup_remote_docker
-  #     - heroku/install
-  #     - checkout
-  #     - run:
-  #         name: Heroku Container Push
-  #         command: |
-  #             heroku container:login
-  #             heroku stack:set container -a jepster
-  #             heroku container:push web -a jepster
-  #             heroku container:release web -a jepster
+  build-and-push:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker Image
+          command: |
+            echo "Building Docker image"
+            docker build -t joshuaemmanuel7/education-space:<<pipeline.git.tag>> .
+      - run:
+          name: Log in to Docker Hub
+          command: |
+            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      - run:
+          name: Push Docker Image to Docker Hub
+          command: |
+             docker push joshuaemmanuel7/education-space:<<pipeline.git.tag>>
+  deploy:
+    docker:
+      - image: cimg/node:16.10
+    steps:
+      - setup_remote_docker
+      - heroku/install
+      - checkout
+      - run:
+          name: Heroku Container Push
+          command: |
+              heroku container:login
+              heroku stack:set container -a jepster
+              heroku container:push web -a jepster
+              heroku container:release web -a jepster
   scan:
     docker:
       - image: cimg/node:16.10
@@ -104,6 +104,9 @@ workflows:
   simple_workflow:
     jobs:
       - build
+      # - deploy:
+      #     requires:
+      #       - test
       - scan:
           requires:
             - build
