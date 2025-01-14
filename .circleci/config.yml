@@ -113,6 +113,9 @@ jobs:
 #               only: /^v.*/
 #             branches: 
 #               ignore: /.*/
+# 
+# 
+# 
 # workflows:
 #   simple_workflow:
 #     jobs:
@@ -123,28 +126,48 @@ jobs:
 #       - test:
 #           requires: 
 #             - scan
+# 
+# 
+# 
+# 
+# workflows:
+#   simple_workflow:
+#     jobs:
+#       - build:
+#           filters:
+#             branches:
+#               only: main
+#       - test:
+#           requires:
+#             - build 
+#           filters:
+#             branches:
+#               only: main    
+#       - scan:
+#           requires:
+#             - build
+#           filters:
+#             branches:
+#               only: main
+#       - codescan:
+#           requires:
+#             - build
+#           filters:
+#             branches:
+#               only: main
 workflows:
   simple_workflow:
     jobs:
-      - build:
-          filters:
-            branches:
-              only: main
-      - test:
-          requires:
-            - build 
-          filters:
-            branches:
-              only: main    
+      - build
+      # - deploy:
+      #     requires:
+      #       - test
       - scan:
           requires:
             - build
-          filters:
-            branches:
-              only: main
       - codescan:
           requires:
             - build
-          filters:
-            branches:
-              only: main
+      - test:
+          requires: 
+            - scan
